@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { InferSelectModel } from 'drizzle-orm';
+import { UUID_REGEX } from '@/lib/utils';
 import type { tasks, taskComments } from '@/db/schema/operations';
 
 // ── Enum Zod Schemas (SOT — values match enums.ts) ──────────────
@@ -94,16 +95,16 @@ export interface KanbanColumn {
 export const TaskFormSchema = z.object({
   title: z.string().min(3, 'Tiêu đề phải có ít nhất 3 ký tự').max(300),
   description: z.string().max(5000).optional(),
-  projectId: z.string().uuid('ID dự án không hợp lệ'),
+  projectId: z.string().regex(UUID_REGEX, 'ID dự án không hợp lệ'),
   type: TaskType.default('feature'),
   priority: TaskPriority.default('medium'),
   status: TaskStatus.default('backlog'),
-  assigneeId: z.string().uuid().optional(),
+  assigneeId: z.string().regex(UUID_REGEX).optional(),
   projectStage: z.string().optional(),
   startDate: z.string().date().optional(),
   dueDate: z.string().date().optional(),
   estimatedHours: z.number().int().min(0).optional(),
-  parentTaskId: z.string().uuid().optional(),
+  parentTaskId: z.string().regex(UUID_REGEX).optional(),
   tags: z.array(z.string().max(50)).max(20).default([]),
 });
 export type TaskFormData = z.infer<typeof TaskFormSchema>;
@@ -130,12 +131,12 @@ export type SortOrder = z.infer<typeof SortOrder>;
 
 export const TaskFilterSchema = z.object({
   search: z.string().optional(),
-  projectId: z.string().uuid().optional(),
+  projectId: z.string().regex(UUID_REGEX).optional(),
   status: TaskStatus.optional(),
   type: TaskType.optional(),
   priority: TaskPriority.optional(),
-  assigneeId: z.string().uuid().optional(),
-  reporterId: z.string().uuid().optional(),
+  assigneeId: z.string().regex(UUID_REGEX).optional(),
+  reporterId: z.string().regex(UUID_REGEX).optional(),
   isOverdue: z.boolean().optional(),
   dateFrom: z.string().date().optional(),
   dateTo: z.string().date().optional(),
@@ -149,7 +150,7 @@ export type TaskFilters = z.infer<typeof TaskFilterSchema>;
 // ── Task Status Transition Input ──────────────────────────────────
 
 export const TransitionTaskStatusInputSchema = z.object({
-  taskId: z.string().uuid(),
+  taskId: z.string().regex(UUID_REGEX),
   fromStatus: TaskStatus,
   toStatus: TaskStatus,
   notes: z.string().max(1000).optional(),

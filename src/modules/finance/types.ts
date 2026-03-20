@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { InferSelectModel } from 'drizzle-orm';
+import { UUID_REGEX } from '@/lib/utils';
 import type { financialRecords } from '@/db/schema/operations';
 
 // ── Enum Zod Schemas (SOT — values match enums.ts) ───────────────
@@ -68,7 +69,7 @@ export interface FinanceDetail extends FinancialRecordRow {
 // ── Finance Form Data ────────────────────────────────────────────
 
 export const FinanceFormSchema = z.object({
-  projectId: z.string().uuid('ID dự án không hợp lệ'),
+  projectId: z.string().regex(UUID_REGEX, 'ID dự án không hợp lệ'),
   type: FinancialType,
   category: FinancialCategory.default('other'),
   amount: z.number().int().min(1, 'Số tiền phải lớn hơn 0'),
@@ -111,7 +112,7 @@ export const FinanceFilterSchema = z.object({
   type: FinancialType.optional(),
   category: FinancialCategory.optional(),
   status: FinancialStatus.optional(),
-  projectId: z.string().uuid().optional(),
+  projectId: z.string().regex(UUID_REGEX).optional(),
   dateFrom: z.string().date().optional(),
   dateTo: z.string().date().optional(),
   page: z.number().int().min(1).default(1),

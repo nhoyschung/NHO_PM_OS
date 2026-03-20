@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UUID_REGEX } from '@/lib/utils';
 import {
   ProjectStage,
   ProjectPriority,
@@ -23,8 +24,8 @@ export const createProjectSchema = z
     priority: ProjectPriority.default('medium'),
     province: z.string().optional(),
     district: z.string().optional(),
-    departmentId: z.string().uuid().optional(),
-    teamLeadId: z.string().uuid().optional(),
+    departmentId: z.string().regex(UUID_REGEX).optional(),
+    teamLeadId: z.string().regex(UUID_REGEX).optional(),
     startDate: z.string().date().optional(),
     endDate: z.string().date().optional(),
     budget: z.number().int().min(0, 'Ngân sách phải >= 0').optional(),
@@ -61,8 +62,8 @@ const updateProjectBase = z.object({
   priority: ProjectPriority,
   province: z.string().nullable(),
   district: z.string().nullable(),
-  departmentId: z.string().uuid().nullable(),
-  teamLeadId: z.string().uuid().nullable(),
+  departmentId: z.string().regex(UUID_REGEX).nullable(),
+  teamLeadId: z.string().regex(UUID_REGEX).nullable(),
   startDate: z.string().date().nullable(),
   endDate: z.string().date().nullable(),
   budget: z.number().int().min(0, 'Ngân sách phải >= 0').nullable(),
@@ -89,7 +90,7 @@ export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
 
 export const transitionStageSchema = z
   .object({
-    projectId: z.string().uuid(),
+    projectId: z.string().regex(UUID_REGEX),
     fromStage: ProjectStage,
     toStage: ProjectStage,
     notes: z.string().max(1000).optional(),

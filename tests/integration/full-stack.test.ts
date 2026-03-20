@@ -382,7 +382,7 @@ describe('Cross-module type references', () => {
 // ════════════════════════════════════════════════════════════════════
 
 describe('Dashboard page routes', () => {
-  const dashboardRoot = path.join(SRC_ROOT, 'app/(dashboard)');
+  const dashboardRoot = path.join(SRC_ROOT, 'app/dashboard');
 
   const expectedPages = [
     { route: 'page.tsx', desc: 'dashboard home' },

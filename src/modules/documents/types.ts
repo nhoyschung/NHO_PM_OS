@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { InferSelectModel } from 'drizzle-orm';
+import { UUID_REGEX } from '@/lib/utils';
 import type { documents, documentVersions } from '@/db/schema/core';
 
 // ── Enum Zod Schemas (SOT — values match enums.ts) ──────────────
@@ -87,8 +88,8 @@ export const DocumentFormSchema = z.object({
   description: z.string().max(2000).optional(),
   type: DocumentType.default('other'),
   status: DocumentStatus.default('draft'),
-  projectId: z.string().uuid().optional(),
-  handoverId: z.string().uuid().optional(),
+  projectId: z.string().regex(UUID_REGEX).optional(),
+  handoverId: z.string().regex(UUID_REGEX).optional(),
   content: z.string().optional(),
   tags: z.array(z.string().max(50)).max(20).default([]),
 });
@@ -100,7 +101,7 @@ export type DocumentUpdateData = z.infer<typeof DocumentUpdateSchema>;
 // ── Document Version Form ─────────────────────────────────────────
 
 export const DocumentVersionFormSchema = z.object({
-  documentId: z.string().uuid(),
+  documentId: z.string().regex(UUID_REGEX),
   changeSummary: z.string().max(500).optional(),
   content: z.string().optional(),
 });
@@ -125,9 +126,9 @@ export const DocumentFilterSchema = z.object({
   search: z.string().optional(),
   type: DocumentType.optional(),
   status: DocumentStatus.optional(),
-  projectId: z.string().uuid().optional(),
-  handoverId: z.string().uuid().optional(),
-  createdBy: z.string().uuid().optional(),
+  projectId: z.string().regex(UUID_REGEX).optional(),
+  handoverId: z.string().regex(UUID_REGEX).optional(),
+  createdBy: z.string().regex(UUID_REGEX).optional(),
   dateFrom: z.string().date().optional(),
   dateTo: z.string().date().optional(),
   page: z.number().int().min(1).default(1),

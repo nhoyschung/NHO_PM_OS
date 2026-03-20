@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UUID_REGEX } from '@/lib/utils';
 
 // ── Report Type ─────────────────────────────────────────────────
 
@@ -21,7 +22,7 @@ export const ReportConfigSchema = z.object({
   type: ReportType,
   dateFrom: z.string().date().optional(),
   dateTo: z.string().date().optional(),
-  projectId: z.string().uuid().optional(),
+  projectId: z.string().regex(UUID_REGEX).optional(),
   format: ExportFormat.default('csv'),
 });
 export type ReportConfig = z.infer<typeof ReportConfigSchema>;

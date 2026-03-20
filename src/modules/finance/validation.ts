@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UUID_REGEX } from '@/lib/utils';
 import {
   FinancialType,
   FinancialCategory,
@@ -10,7 +11,7 @@ import { VALIDATION } from './constants';
 // ── Create Finance Record Schema ─────────────────────────────────
 
 export const createFinanceRecordSchema = z.object({
-  projectId: z.string().uuid('ID dự án không hợp lệ'),
+  projectId: z.string().regex(UUID_REGEX, 'ID dự án không hợp lệ'),
   type: FinancialType,
   category: FinancialCategory.default('other'),
   amount: z
@@ -30,7 +31,7 @@ export type CreateFinanceRecordInput = z.infer<typeof createFinanceRecordSchema>
 // ── Update Finance Record Schema ─────────────────────────────────
 
 const updateFinanceRecordBase = z.object({
-  projectId: z.string().uuid('ID dự án không hợp lệ'),
+  projectId: z.string().regex(UUID_REGEX, 'ID dự án không hợp lệ'),
   type: FinancialType,
   category: FinancialCategory,
   amount: z
@@ -52,7 +53,7 @@ export type UpdateFinanceRecordInput = z.infer<typeof updateFinanceRecordSchema>
 // ── Approve Finance Record Schema ────────────────────────────────
 
 export const approveFinanceRecordSchema = z.object({
-  recordId: z.string().uuid('ID bản ghi không hợp lệ'),
+  recordId: z.string().regex(UUID_REGEX, 'ID bản ghi không hợp lệ'),
   notes: z.string().max(500).optional(),
 });
 export type ApproveFinanceRecordInput = z.infer<typeof approveFinanceRecordSchema>;
@@ -60,7 +61,7 @@ export type ApproveFinanceRecordInput = z.infer<typeof approveFinanceRecordSchem
 // ── Reject Finance Record Schema ─────────────────────────────────
 
 export const rejectFinanceRecordSchema = z.object({
-  recordId: z.string().uuid('ID bản ghi không hợp lệ'),
+  recordId: z.string().regex(UUID_REGEX, 'ID bản ghi không hợp lệ'),
   reason: z.string().min(3, 'Lý do từ chối phải có ít nhất 3 ký tự').max(500),
 });
 export type RejectFinanceRecordInput = z.infer<typeof rejectFinanceRecordSchema>;
@@ -76,7 +77,7 @@ export const csvRowSchema = z.object({
     .min(1, 'Số tiền phải lớn hơn 0'),
   description: z.string().min(3).max(2000),
   transaction_date: z.string().date('Ngày không hợp lệ'),
-  project_id: z.string().uuid('ID dự án không hợp lệ'),
+  project_id: z.string().regex(UUID_REGEX, 'ID dự án không hợp lệ'),
   reference_number: z.string().max(100).optional(),
   currency: z.string().length(3).default('VND'),
 });
@@ -99,7 +100,7 @@ const ALLOWED_STATUS_TRANSITIONS: Record<string, readonly string[]> = {
 
 export const financeStatusTransitionSchema = z
   .object({
-    recordId: z.string().uuid(),
+    recordId: z.string().regex(UUID_REGEX),
     fromStatus: FinancialStatus,
     toStatus: FinancialStatus,
   })

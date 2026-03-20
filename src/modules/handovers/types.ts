@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { InferSelectModel } from 'drizzle-orm';
+import { UUID_REGEX } from '@/lib/utils';
 import type { handovers, handoverChecklistItems } from '@/db/schema/core';
 
 // ── Enum Zod Schemas (SOT — values match enums.ts) ──────────────
@@ -93,13 +94,13 @@ export interface HandoverDetail extends HandoverRow {
 // ── Handover Form Data ───────────────────────────────────────────
 
 export const HandoverFormSchema = z.object({
-  projectId: z.string().uuid('Dự án là bắt buộc'),
+  projectId: z.string().regex(UUID_REGEX, 'Dự án là bắt buộc'),
   title: z.string().min(3, 'Tiêu đề bàn giao phải có ít nhất 3 ký tự').max(200),
   description: z.string().max(2000).optional(),
   type: HandoverType,
-  toUserId: z.string().uuid('Người nhận là bắt buộc'),
-  fromDepartmentId: z.string().uuid().optional(),
-  toDepartmentId: z.string().uuid().optional(),
+  toUserId: z.string().regex(UUID_REGEX, 'Người nhận là bắt buộc'),
+  fromDepartmentId: z.string().regex(UUID_REGEX).optional(),
+  toDepartmentId: z.string().regex(UUID_REGEX).optional(),
   fromStage: z.string().optional(),
   toStage: z.string().optional(),
   dueDate: z.string().datetime().optional(),
@@ -141,9 +142,9 @@ export const HandoverFilterSchema = z.object({
   search: z.string().optional(),
   status: HandoverStatus.optional(),
   type: HandoverType.optional(),
-  projectId: z.string().uuid().optional(),
-  fromUserId: z.string().uuid().optional(),
-  toUserId: z.string().uuid().optional(),
+  projectId: z.string().regex(UUID_REGEX).optional(),
+  fromUserId: z.string().regex(UUID_REGEX).optional(),
+  toUserId: z.string().regex(UUID_REGEX).optional(),
   dateFrom: z.string().date().optional(),
   dateTo: z.string().date().optional(),
   page: z.number().int().min(1).default(1),

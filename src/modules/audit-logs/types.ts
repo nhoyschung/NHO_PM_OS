@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { InferSelectModel } from 'drizzle-orm';
+import { UUID_REGEX } from '@/lib/utils';
 import type { auditLogs } from '@/db/schema/operations';
 
 // ── Enum Zod Schemas (SOT — values match enums.ts) ──────────────
@@ -92,8 +93,8 @@ export const AuditLogFilterSchema = z.object({
   action: AuditAction.optional(),
   entityType: AuditEntityType.optional(),
   severity: AuditSeverity.optional(),
-  userId: z.string().uuid().optional(),
-  projectId: z.string().uuid().optional(),
+  userId: z.string().regex(UUID_REGEX).optional(),
+  projectId: z.string().regex(UUID_REGEX).optional(),
   dateFrom: z.string().date().optional(),
   dateTo: z.string().date().optional(),
   page: z.number().int().min(1).default(1),

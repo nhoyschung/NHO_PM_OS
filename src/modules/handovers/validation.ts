@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UUID_REGEX } from '@/lib/utils';
 import {
   HandoverStatus,
   HandoverType,
@@ -11,16 +12,16 @@ import { ALLOWED_TRANSITIONS, VALIDATION } from './constants';
 // ── Create Handover Schema ──────────────────────────────────────
 
 export const createHandoverSchema = z.object({
-  projectId: z.string().uuid('Dự án là bắt buộc'),
+  projectId: z.string().regex(UUID_REGEX, 'Dự án là bắt buộc'),
   title: z
     .string()
     .min(VALIDATION.TITLE_MIN, `Tiêu đề phải có ít nhất ${VALIDATION.TITLE_MIN} ký tự`)
     .max(VALIDATION.TITLE_MAX),
   description: z.string().max(VALIDATION.DESCRIPTION_MAX).optional(),
   type: HandoverType,
-  toUserId: z.string().uuid('Người nhận là bắt buộc'),
-  fromDepartmentId: z.string().uuid().optional(),
-  toDepartmentId: z.string().uuid().optional(),
+  toUserId: z.string().regex(UUID_REGEX, 'Người nhận là bắt buộc'),
+  fromDepartmentId: z.string().regex(UUID_REGEX).optional(),
+  toDepartmentId: z.string().regex(UUID_REGEX).optional(),
   fromStage: z.string().optional(),
   toStage: z.string().optional(),
   dueDate: z.string().datetime().optional(),
@@ -37,9 +38,9 @@ const updateHandoverBase = z.object({
     .max(VALIDATION.TITLE_MAX),
   description: z.string().max(VALIDATION.DESCRIPTION_MAX).nullable(),
   type: HandoverType,
-  toUserId: z.string().uuid(),
-  fromDepartmentId: z.string().uuid().nullable(),
-  toDepartmentId: z.string().uuid().nullable(),
+  toUserId: z.string().regex(UUID_REGEX),
+  fromDepartmentId: z.string().regex(UUID_REGEX).nullable(),
+  toDepartmentId: z.string().regex(UUID_REGEX).nullable(),
   fromStage: z.string().nullable(),
   toStage: z.string().nullable(),
   dueDate: z.string().datetime().nullable(),
@@ -54,7 +55,7 @@ export type UpdateHandoverInput = z.infer<typeof updateHandoverSchema>;
 
 export const transitionStatusSchema = z
   .object({
-    handoverId: z.string().uuid(),
+    handoverId: z.string().regex(UUID_REGEX),
     fromStatus: HandoverStatus,
     toStatus: HandoverStatus,
     notes: z.string().max(VALIDATION.NOTES_MAX).optional(),
@@ -75,7 +76,7 @@ export type TransitionStatusInput = z.infer<typeof transitionStatusSchema>;
 // ── Approve Handover Schema ─────────────────────────────────────
 
 export const approveHandoverSchema = z.object({
-  handoverId: z.string().uuid(),
+  handoverId: z.string().regex(UUID_REGEX),
   notes: z.string().max(VALIDATION.NOTES_MAX).optional(),
 });
 export type ApproveHandoverInput = z.infer<typeof approveHandoverSchema>;

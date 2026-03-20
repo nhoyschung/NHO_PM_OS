@@ -27,3 +27,11 @@ export function formatCurrency(amount: number): string {
 export function generateId(): string {
   return crypto.randomUUID();
 }
+
+/**
+ * Relaxed UUID regex — accepts any 8-4-4-4-12 hex pattern.
+ * Zod v4's built-in .uuid() enforces RFC 4122 variant bits,
+ * which rejects seed/test UUIDs like 00000000-0000-0000-0000-000000000001.
+ * Use this with z.string().regex(UUID_REGEX) instead of z.string().uuid().
+ */
+export const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

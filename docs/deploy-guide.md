@@ -50,11 +50,11 @@ The application will be available at **http://localhost:3000**.
 
 | Email | Password | Role (Vai tro) |
 |-------|----------|------|
-| admin@projectops.vn | password123 | admin |
-| manager@projectops.vn | password123 | manager |
-| lead@projectops.vn | password123 | lead |
-| member@projectops.vn | password123 | member |
-| viewer@projectops.vn | password123 | viewer |
+| admin@projectopsos.local | admin123456 | admin |
+| manager@projectopsos.local | admin123456 | manager |
+| lead@projectopsos.local | admin123456 | lead |
+| member@projectopsos.local | admin123456 | member |
+| viewer@projectopsos.local | admin123456 | viewer |
 
 ---
 

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UUID_REGEX } from '@/lib/utils';
 import { DocumentType, DocumentStatus, DocumentFilterSchema } from './types';
 import { VALIDATION } from './constants';
 
@@ -16,8 +17,8 @@ export const uploadDocumentSchema = z.object({
     .optional(),
   type: DocumentType.default('other'),
   status: DocumentStatus.default('draft'),
-  projectId: z.string().uuid('ID dự án không hợp lệ').optional(),
-  handoverId: z.string().uuid('ID bàn giao không hợp lệ').optional(),
+  projectId: z.string().regex(UUID_REGEX, 'ID dự án không hợp lệ').optional(),
+  handoverId: z.string().regex(UUID_REGEX, 'ID bàn giao không hợp lệ').optional(),
   content: z.string().optional(),
   tags: z
     .array(z.string().max(VALIDATION.TAG_MAX_LENGTH))
@@ -40,8 +41,8 @@ const updateDocumentBase = z.object({
     .nullable(),
   type: DocumentType,
   status: DocumentStatus,
-  projectId: z.string().uuid('ID dự án không hợp lệ').nullable(),
-  handoverId: z.string().uuid('ID bàn giao không hợp lệ').nullable(),
+  projectId: z.string().regex(UUID_REGEX, 'ID dự án không hợp lệ').nullable(),
+  handoverId: z.string().regex(UUID_REGEX, 'ID bàn giao không hợp lệ').nullable(),
   content: z.string().nullable(),
   tags: z.array(z.string().max(VALIDATION.TAG_MAX_LENGTH)).max(VALIDATION.TAGS_MAX_COUNT),
 });
@@ -53,7 +54,7 @@ export type UpdateDocumentInput = z.infer<typeof updateDocumentSchema>;
 // When uploading a new version of an existing document.
 
 export const createVersionSchema = z.object({
-  documentId: z.string().uuid('ID tài liệu không hợp lệ'),
+  documentId: z.string().regex(UUID_REGEX, 'ID tài liệu không hợp lệ'),
   changeSummary: z
     .string()
     .max(VALIDATION.CHANGE_SUMMARY_MAX, `Tóm tắt thay đổi không được vượt quá ${VALIDATION.CHANGE_SUMMARY_MAX} ký tự`)

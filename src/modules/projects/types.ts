@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { InferSelectModel } from 'drizzle-orm';
+import { UUID_REGEX } from '@/lib/utils';
 import type {
   projects,
   projectMembers,
@@ -106,8 +107,8 @@ export const ProjectFormSchema = z.object({
   priority: ProjectPriority.default('medium'),
   province: z.string().optional(),
   district: z.string().optional(),
-  departmentId: z.string().uuid().optional(),
-  teamLeadId: z.string().uuid().optional(),
+  departmentId: z.string().regex(UUID_REGEX).optional(),
+  teamLeadId: z.string().regex(UUID_REGEX).optional(),
   startDate: z.string().date().optional(),
   endDate: z.string().date().optional(),
   budget: z.number().int().min(0).optional(),
@@ -132,7 +133,7 @@ export interface StageTransition {
 }
 
 export const StageTransitionInputSchema = z.object({
-  projectId: z.string().uuid(),
+  projectId: z.string().regex(UUID_REGEX),
   targetStage: ProjectStage,
   notes: z.string().max(1000).optional(),
 });
@@ -160,8 +161,8 @@ export const ProjectFilterSchema = z.object({
   stage: ProjectStage.optional(),
   priority: ProjectPriority.optional(),
   healthStatus: HealthStatus.optional(),
-  departmentId: z.string().uuid().optional(),
-  managerId: z.string().uuid().optional(),
+  departmentId: z.string().regex(UUID_REGEX).optional(),
+  managerId: z.string().regex(UUID_REGEX).optional(),
   province: z.string().optional(),
   isArchived: z.boolean().optional(),
   dateFrom: z.string().date().optional(),
