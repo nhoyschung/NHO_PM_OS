@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+
+# Build output
+.next/
+out/
+
+# Version control
+.git/
+.gitignore
+
+# Environment files (secrets)
+.env
+.env.local
+.env.production
+
+# IDE & editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test & dev files
+*.test.ts
+*.test.tsx
+__tests__/
+coverage/
+vitest.config.ts
+
+# Build reports & docs
+build-reports/
+*.md
+!README.md
+
+# Docker files (prevent recursive context)
+Dockerfile
+docker-compose*.yml
+
+# Misc
+*.log
+npm-debug.log*
+pnpm-debug.log*
